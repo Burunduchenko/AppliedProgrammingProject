@@ -2,7 +2,7 @@ Project v0.75-beta
 
 SETUP project: step 1: open cmd.exe
 
-step 2: git clone https://github.com/sviatoslav19102002/nulp_python.git
+step 2: git clone https://github.com/Burunduchenko/AppliedProgrammingProject
 
 step 3: cd {path}/nulp_python/poetry-demo
 
