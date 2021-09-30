@@ -1,1 +1,3 @@
-
+*.lock
+*.toml
+*.rst
