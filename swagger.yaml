@@ -57,7 +57,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UserToCreate'
+              $ref: '#/components/schemas/User'
         required: true
       responses:
         '200':
@@ -68,8 +68,8 @@ paths:
                 $ref: '#/components/schemas/User'
         '400':
           description: User with such username already exists
-
-
+          
+          
   /auth/login:
     post:
       tags:
@@ -91,7 +91,7 @@ paths:
           type: string
       responses:
         200:
-          description: "successful operation."
+          description: "successful operation." 
           content:
             application/json:
               schema:
@@ -100,7 +100,7 @@ paths:
                   $ref: '#/components/schemas/User'
         401:
           $ref: '#/components/responses/InputDataError'
-
+          
   /auth/logout:
     post:
       tags:
@@ -114,7 +114,7 @@ paths:
           $ref: '#/components/responses/AuthorizationError'
       security:
       - bearerAuth: []
-
+          
   /user/{userId}:
     get:
       tags:
@@ -138,7 +138,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/User'
         401:
-          $ref: '#/components/responses/AuthorizationError'
+          $ref: '#/components/responses/AuthorizationError'          
         404:
           description: A user with provided ID was not found.
       security:
@@ -176,7 +176,7 @@ paths:
         404:
           description: User is not found.
       security:
-      - bearerAuth: []
+      - bearerAuth: []        
     delete:
       tags:
       - user
@@ -200,7 +200,7 @@ paths:
           description: User is not found.
       security:
       - bearerAuth: []
-
+    
   /audience:
     post:
       tags:
@@ -239,7 +239,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/AudienceToCreate'
+              $ref: '#/components/schemas/Audience'
       responses:
         200:
           description: "successful operation. Audience is created"
@@ -248,7 +248,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Reservation'
         401:
-          description: Audience with such number already exists
+          description: Audience with such number already exists  
       security:
       - bearerAuth: []
     get:
@@ -265,10 +265,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/Audience'
         401:
-          $ref: '#/components/responses/AuthorizationError'
+          $ref: '#/components/responses/AuthorizationError'     
       security:
       - bearerAuth: []
-
+      
   /audience/{audienceID}:
     put:
       tags:
@@ -292,7 +292,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Audience'
         401:
-          $ref: '#/components/responses/AuthorizationError'
+          $ref: '#/components/responses/AuthorizationError'     
       security:
       - bearerAuth: []
     get:
@@ -317,7 +317,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Audience'
         401:
-          $ref: '#/components/responses/AuthorizationError'
+          $ref: '#/components/responses/AuthorizationError'     
       security:
       - bearerAuth: []
     delete:
@@ -342,10 +342,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/Audience'
         401:
-          $ref: '#/components/responses/AuthorizationError'
+          $ref: '#/components/responses/AuthorizationError'     
       security:
       - bearerAuth: []
-
+    
   /reservation:
     get:
       tags:
@@ -363,7 +363,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Reservation'
         401:
-          $ref: '#/components/responses/AuthorizationError'
+          $ref: '#/components/responses/AuthorizationError'          
       security:
       - bearerAuth: []
     post:
@@ -396,7 +396,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ReservationToCreate'
+              $ref: '#/components/schemas/Reservation'
       responses:
         200:
           description: "successful operation. Reservation is created"
@@ -405,10 +405,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/Reservation'
         401:
-          $ref: '#/components/responses/AuthorizationError'
+          $ref: '#/components/responses/AuthorizationError'     
       security:
       - bearerAuth: []
-
+      
   /reservation/{reservationId}:
     get:
       tags:
@@ -432,7 +432,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Reservation'
         401:
-          $ref: '#/components/responses/AuthorizationError'
+          $ref: '#/components/responses/AuthorizationError'          
         404:
           description: The reservation with provided ID was not found.
       security:
@@ -470,7 +470,7 @@ paths:
         404:
           description: User is not found.
       security:
-      - bearerAuth: []
+      - bearerAuth: []  
     delete:
       tags:
       - reservation
@@ -497,8 +497,8 @@ paths:
         404:
           description: Reservation is not found.
       security:
-      - bearerAuth: []
-
+      - bearerAuth: []  
+      
   /reservation/{username}:
      get:
       tags:
@@ -523,7 +523,7 @@ paths:
                 items:
                   $ref: '#/components/schemas/Reservation'
         401:
-          $ref: '#/components/responses/AuthorizationError'
+          $ref: '#/components/responses/AuthorizationError'        
       security:
       - bearerAuth: []
   /reservation/{userID}:
@@ -551,20 +551,14 @@ paths:
                 items:
                   $ref: '#/components/schemas/Reservation'
         401:
-          $ref: '#/components/responses/AuthorizationError'
+          $ref: '#/components/responses/AuthorizationError'        
       security:
       - bearerAuth: []
-
-
+      
+  
 components:
   schemas:
     User:
-      required:
-        - id
-        - username
-        - password
-        - name
-        - surname
       type: object
       properties:
         id:
@@ -579,48 +573,7 @@ components:
         password:
           type: string
           format: password
-    UserToCreate:
-      required:
-        - username
-        - password
-        - name
-        - surname
-      type: object
-      properties:
-        name:
-          type: string
-        surname:
-          type: string
-        username:
-          type: string
-        password:
-          type: string
-          format: password
-    AudienceToCreate:
-      required:
-        - number
-        - amount_of_places
-        - status
-        - reservuation_date
-      type: object
-      properties:
-        number:
-          type: integer
-          format: int64
-        amount_of_places:
-          type: integer
-          format: int64
-        status:
-          type: boolean
-        reservuation_date:
-          type: string
     Audience:
-      required:
-        - id
-        - number
-        - amount_of_places
-        - status
-        - reservuation_date
       type: object
       properties:
         id:
@@ -637,35 +590,11 @@ components:
         reservuation_date:
           type: string
     Reservation:
-      required:
-        - id
-        - user_id
-        - title
-        - id_of_audience
-        - date
       type: object
       properties:
         id:
           type: integer
           format: int64
-        user_id:
-          type: integer
-          format: int64
-        title:
-          type: string
-        id_of_audience:
-          type: integer
-          format: int64
-        date:
-          type: string
-    ReservationToCreate:
-      required:
-        - user_id
-        - title
-        - id_of_audience
-        - date
-      type: object
-      properties:
         user_id:
           type: integer
           format: int64
