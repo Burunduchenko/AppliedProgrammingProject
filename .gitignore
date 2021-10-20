@@ -1,3 +1,4 @@
 *.lock
 *.toml
 *.rst
+__pycache__
