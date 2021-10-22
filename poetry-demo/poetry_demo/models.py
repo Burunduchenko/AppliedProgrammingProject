@@ -1,8 +1,18 @@
-from sqlalchemy import create_engine, MetaData, Table, Integer, String, \
-    Column, Date, ForeignKey, Boolean
+from sqlalchemy import create_engine, Integer, String, Column, Date, ForeignKey, Boolean
 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
+from sqlalchemy import Integer, String, Column, Date, ForeignKey
+
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine
+from sqlalchemy.orm import relationship, sessionmaker, scoped_session
+
+engine = create_engine('mysql+pymysql://root:root@localhost:3306/mydb')
+
+SessionFactory = sessionmaker(bind=engine)
+
+Session = scoped_session(SessionFactory)
 
 Base = declarative_base()
 metadata = Base.metadata
