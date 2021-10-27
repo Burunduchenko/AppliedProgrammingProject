@@ -39,7 +39,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`audience` (
   `number` INT NOT NULL,
   `amount_of_places` INT NOT NULL,
   `status` TINYINT NOT NULL,
-  `reservuation_date` DATE NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) VISIBLE)
 ENGINE = InnoDB;
@@ -51,7 +50,8 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `mydb`.`reservation` (
   `id` INT NOT NULL,
   `title` VARCHAR(45) NOT NULL,
-  `date` DATE NOT NULL,
+  `from_date` DATETIME NOT NULL,
+  `to_date` DATETIME NOT NULL,
   `user_id` INT UNSIGNED NOT NULL,
   `audience_id` INT NOT NULL,
   PRIMARY KEY (`id`),

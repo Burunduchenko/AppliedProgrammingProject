@@ -8,7 +8,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import relationship, sessionmaker, scoped_session
 
-engine = create_engine('mysql+pymysql://root:root@localhost:3306/mydb')
+# engine = create_engine('mysql+pymysql://root:root@localhost:3306/mydb')
+engine = create_engine('mysql+pymysql://root:pass@localhost:3306/lab7_pp')
 
 SessionFactory = sessionmaker(bind=engine)
 
@@ -17,28 +18,31 @@ Session = scoped_session(SessionFactory)
 Base = declarative_base()
 metadata = Base.metadata
 
+
 class User(Base):
     __tablename__ = 'user'
-    id=Column(Integer, primary_key=True)
-    name=Column(String(45))
-    surname=Column(String(45))
-    username=Column(String(45))
-    password=Column(String(45))
+    id = Column(Integer, primary_key=True)
+    name = Column(String(45))
+    surname = Column(String(45))
+    username = Column(String(45))
+    password = Column(String(45))
+
 
 class Audience(Base):
     __tablename__ = 'audience'
     id = Column(Integer, primary_key=True)
-    number=Column(Integer)
-    amount_of_places=Column(Integer)
-    status=Column(Boolean)
-    reservuation_date=Column(Date)
+    number = Column(Integer)
+    amount_of_places = Column(Integer)
+    status = Column(Boolean)
+
 
 class Reservation(Base):
     __tablename__ = 'reservation'
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'))
-    title=Column(String(45))
+    title = Column(String(45))
     audience_id = Column(Integer, ForeignKey('audience.id'))
-    date = Column(Date)
+    from_date = Column(Date)
+    to_date = Column(Date)
     audience = relationship("Audience")
     user = relationship("User")
