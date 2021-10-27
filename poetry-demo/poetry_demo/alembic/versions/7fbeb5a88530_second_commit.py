@@ -1,8 +1,8 @@
-"""First commit
+"""Second commit
 
-Revision ID: 12bee2d2bdcd
+Revision ID: 7fbeb5a88530
 Revises: 
-Create Date: 2021-10-20 10:29:17.071675
+Create Date: 2021-10-26 21:45:57.542185
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '12bee2d2bdcd'
+revision = '7fbeb5a88530'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -23,7 +23,6 @@ def upgrade():
     sa.Column('number', sa.Integer(), nullable=True),
     sa.Column('amount_of_places', sa.Integer(), nullable=True),
     sa.Column('status', sa.Boolean(), nullable=True),
-    sa.Column('reservuation_date', sa.Date(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('user',
@@ -39,7 +38,8 @@ def upgrade():
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('title', sa.String(length=45), nullable=True),
     sa.Column('audience_id', sa.Integer(), nullable=True),
-    sa.Column('date', sa.Date(), nullable=True),
+    sa.Column('from_date', sa.Date(), nullable=True),
+    sa.Column('to_date', sa.Date(), nullable=True),
     sa.ForeignKeyConstraint(['audience_id'], ['audience.id'], ),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')

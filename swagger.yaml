@@ -587,8 +587,6 @@ components:
           format: int64
         status:
           type: boolean
-        reservuation_date:
-          type: string
     Reservation:
       type: object
       properties:
@@ -600,11 +598,15 @@ components:
           format: int64
         title:
           type: string
-        id_of_audience:
+        audience_id:
           type: integer
           format: int64
-        date:
+        from_date:
           type: string
+          format: date-time
+        to_date:
+          type: string
+          format: date-time
   securitySchemes:
     bearerAuth:
       type: http
