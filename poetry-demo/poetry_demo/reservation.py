@@ -119,13 +119,17 @@ def update_reservation(reservationId):
     if not db_reservation:
         return Response(status=404, response='A reservation with provided ID was not found.')
 
-    d1 = datetime.strptime(data['from_date'], '%Y-%m-%d %H:%M:%S')
-    d2 = datetime.strptime(data['to_date'], '%Y-%m-%d %H:%M:%S')
+    if 'from_date' in data.keys():
+        d1 = datetime.strptime(data['from_date'], '%Y-%m-%d %H:%M:%S')
+    else:
+        d1 = db_reservation.from_date
+    if 'to_date' in data.keys():
+        d2 = datetime.strptime(data['to_date'], '%Y-%m-%d %H:%M:%S')
+    else:
+        d2 = db_reservation.to_date
 
     # Check if audience is available for given date if user wants to change dates
-    if db_reservation.from_date != data['from_date'] \
-            or db_reservation.to_date != data['to_date'] \
-            or db_reservation.audience_id != data['audience_id']:
+    if 'from_date' in data.keys() or 'to_date' in data.keys() or 'audience_id' in data.keys():
         # Compare if end date is bigger than start date
         if d1 > d2:
             return Response(status=400, response="Invalid dates input.")
@@ -135,10 +139,13 @@ def update_reservation(reservationId):
         if (diff.total_seconds() / 3600) < 1 or diff.days > 5:
             return Response(status=400, response="Audience cannot be reserved for that period of time.")
 
-        audience = session.query(Audience).filter_by(id=data['audience_id']).first()
+        if 'audience_id' in data.keys():
+            audience = session.query(Audience).filter_by(id=data['audience_id']).first()
+        else:
+            audience = session.query(Audience).filter_by(id=db_reservation.audience_id).first()
         if not audience.status:
             return Response(status=400, response="Audience is not available now.")
-        reservations = session.query(Reservation).filter_by(audience_id=data['audience_id'])
+        reservations = session.query(Reservation).filter_by(audience_id=audience.id)
         flag = False
         for r in reservations:
             if db_reservation.id != r.id:
@@ -151,10 +158,14 @@ def update_reservation(reservationId):
             return Response(status=400, response='Audience is already reserved for given time.')
 
     # Change reservation data
-    db_reservation.audience_id = data['audience_id']
-    db_reservation.title = data['title']
-    db_reservation.from_date = data['from_date']
-    db_reservation.to_date = data['to_date']
+    if 'audience_id' in data.keys():
+        db_reservation.audience_id = data['audience_id']
+    if 'title' in data.keys():
+        db_reservation.title = data['title']
+    if 'from_date' in data.keys():
+        db_reservation.from_date = data['from_date']
+    if 'to_date' in data.keys():
+        db_reservation.from_date = data['to_date']
 
     # Save changes
     session.commit()

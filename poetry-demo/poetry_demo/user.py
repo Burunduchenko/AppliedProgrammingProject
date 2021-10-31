@@ -41,16 +41,19 @@ def update_user(userId):
         return Response(status=404, response='A user with provided ID was not found.')
 
     # Check if username is not taken if user tries to change it
-    if db_user.username != data['username']:
+    if 'username' in data.keys():
         exists = session.query(User.id).filter_by(username=data['username']).first()
         if exists:
             return Response(status=400, response='User with such username already exists.')
+        db_user.username = data['username']
     # Change user data
-    db_user.name = data['name']
-    db_user.surname = data['surname']
-    hashed_password = bcrypt.generate_password_hash(data['password'])
-    db_user.password = hashed_password
-    db_user.username = data['username']
+    if 'name' in data.keys():
+        db_user.name = data['name']
+    if "surname" in data.keys():
+        db_user.surname = data['surname']
+    if 'password' in data.keys():
+        hashed_password = bcrypt.generate_password_hash(data['password'])
+        db_user.password = hashed_password
 
     # Save changes
     session.commit()
