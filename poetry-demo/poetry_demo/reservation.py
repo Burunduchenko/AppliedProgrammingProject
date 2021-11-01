@@ -21,6 +21,16 @@ def create_reservation():
     except ValidationError as err:
         return jsonify(err.messages), 400
 
+    # Check if user already exists
+    exists = session.query(User.id).filter_by(id=data['user_id']).first()
+    if not exists:
+        return Response(status=404, response='User with such id was not found.')
+
+    # Check if audience already exists
+    exists = session.query(Audience.id).filter_by(id=data['audience_id']).first()
+    if not exists:
+        return Response(status=404, response='Audience with such id was not found.')
+
     d1 = datetime.strptime(data['from_date'], '%Y-%m-%d %H:%M:%S')
     d2 = datetime.strptime(data['to_date'], '%Y-%m-%d %H:%M:%S')
 
