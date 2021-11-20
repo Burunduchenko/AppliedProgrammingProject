@@ -21,4 +21,4 @@ def myendpoint():
     return status_code
 
 
-serve(app, host='0.0.0.0', port=8089, threads=1)
+serve(app, host='127.0.0.1', port=8089, threads=1)

@@ -2,7 +2,7 @@ from flask import Response, request, jsonify, Blueprint
 from marshmallow import ValidationError
 from models import Audience, Session
 from validation_schemas import AudienceSchema
-
+from user import  auth
 audience = Blueprint('audience', __name__)
 
 session = Session()
@@ -10,6 +10,7 @@ session = Session()
 
 # Create new audience
 @audience.route('/api/v1/audience', methods=['POST'])
+@auth.login_required
 def create_audience():
     # Get data from request body
     data = request.get_json()
@@ -37,6 +38,7 @@ def create_audience():
 
 # Get all audiences
 @audience.route('/api/v1/audience', methods=['GET'])
+@auth.login_required
 def get_audiences():
     # Get all audiences from db
     audiences = session.query(Audience)
@@ -53,6 +55,7 @@ def get_audiences():
 
 # Get audience by id
 @audience.route('/api/v1/audience/<audienceId>', methods=['GET'])
+@auth.login_required
 def get_audience(audienceId):
     # Check if audience exists
     db_audience = session.query(Audience).filter_by(id=audienceId).first()
@@ -71,6 +74,7 @@ def get_audience(audienceId):
 
 # Update audience by id
 @audience.route('/api/v1/audience/<audienceId>', methods=['PUT'])
+@auth.login_required
 def update_audience(audienceId):
     # Get data from request body
     data = request.get_json()
@@ -113,6 +117,7 @@ def update_audience(audienceId):
 
 # Delete audience by id
 @audience.route('/api/v1/audience/<audienceId>', methods=['DELETE'])
+@auth.login_required
 def delete_audience(audienceId):
     # Check if audience exists
     db_audience = session.query(Audience).filter_by(id=audienceId).first()

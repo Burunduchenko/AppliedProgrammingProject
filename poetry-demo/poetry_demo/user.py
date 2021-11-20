@@ -3,20 +3,35 @@ from marshmallow import ValidationError
 from flask_bcrypt import Bcrypt
 from models import User, Session
 from validation_schemas import UserSchema
+from flask_httpauth import HTTPBasicAuth
 
 user = Blueprint('user', __name__)
 bcrypt = Bcrypt()
 
 session = Session()
 
+auth = HTTPBasicAuth()
+
+@auth.verify_password
+def verify_password(username, password):
+    try:
+        user = session.query(User).filter_by(username=username).first()
+        if user and bcrypt.check_password_hash(user.password, password):
+            return username
+    except:
+        return None
 
 # Get user by id
 @user.route('/api/v1/user/<userId>', methods=['GET'])
+@auth.login_required
 def get_user(userId):
     # Check if user exists
     db_user = session.query(User).filter_by(id=userId).first()
     if not db_user:
         return Response(status=404, response='A user with provided ID was not found.')
+
+    if db_user.username != auth.username():
+        return Response(status=404, response='You can get only your information')
 
     # Return user data
     user_data = {'id': db_user.id, 'name': db_user.name, 'surname': db_user.surname, 'username': db_user.username}
@@ -25,6 +40,7 @@ def get_user(userId):
 
 # Update user by id
 @user.route('/api/v1/user/<userId>', methods=['PUT'])
+@auth.login_required
 def update_user(userId):
     # Get data from request body
     data = request.get_json()
@@ -39,6 +55,9 @@ def update_user(userId):
     db_user = session.query(User).filter_by(id=userId).first()
     if not db_user:
         return Response(status=404, response='A user with provided ID was not found.')
+
+    if db_user.username != auth.username():
+        return Response(status=404, response='You can update only your information')
 
     # Check if username is not taken if user tries to change it
     if 'username' in data.keys():
@@ -65,12 +84,14 @@ def update_user(userId):
 
 # Delete user by id
 @user.route('/api/v1/user/<userId>', methods=['DELETE'])
+@auth.login_required
 def delete_user(userId):
     # Check if user exists
     db_user = session.query(User).filter_by(id=userId).first()
     if not db_user:
         return Response(status=404, response='A user with provided ID was not found.')
-
+    if db_user.username != auth.username():
+        return Response(status=404, response='You can delete only your account')
     # Delete user
     session.delete(db_user)
     session.commit()
