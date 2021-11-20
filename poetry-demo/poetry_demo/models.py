@@ -9,7 +9,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import relationship, sessionmaker, scoped_session
 
 # engine = create_engine('mysql+pymysql://root:root@localhost:3306/mydb')
-engine = create_engine('mysql+pymysql://root:pass@localhost:3306/lab7_pp')
+engine = create_engine('mysql+pymysql://root:EL_PRESIDENTO@localhost:3306/mydb')
 
 SessionFactory = sessionmaker(bind=engine)
 
