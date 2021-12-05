@@ -3,6 +3,8 @@ from marshmallow import ValidationError
 from flask_bcrypt import Bcrypt
 from models import User, Session
 from validation_schemas import UserSchema
+from sqlalchemy.exc import IntegrityError
+
 
 auth = Blueprint('auth', __name__)
 bcrypt = Bcrypt()
@@ -20,12 +22,12 @@ def register():
     try:
         UserSchema().load(data)
     except ValidationError as err:
-        return jsonify(err.messages), 400
+        return jsonify(err.messages), 401
 
     # Check if user already exists
     exists = session.query(User.id).filter_by(username=data['username']).first()
     if exists:
-        return Response(status=400, response='User with such username already exists.')
+        return Response(status=404, response='User with such username already exists.')
 
     # Hash user's password
     hashed_password = bcrypt.generate_password_hash(data['password'])
@@ -35,5 +37,5 @@ def register():
     # Add new user to db
     session.add(new_user)
     session.commit()
+    return Response(status=200, response='New user was successfully created!')
 
-    return Response(response='New user was successfully created!')
