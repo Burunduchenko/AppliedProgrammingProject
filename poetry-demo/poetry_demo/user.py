@@ -16,32 +16,33 @@ auth = HTTPBasicAuth()
 def verify_password(username, password):
     try:
         user = session.query(User).filter_by(username=username).first()
-        if user and bcrypt.check_password_hash(user.password, password):
+        # if user and bcrypt.check_password_hash(user.password, password):
+        if user and user.password == password:
             return username
     except:
         return None
 
-# Get user by id
-@user.route('/api/v1/user/<userId>', methods=['GET'])
+# Get user by username
+@user.route('/api/v1/user/<userName>', methods=['GET'])
 @auth.login_required
-def get_user(userId):
+def get_user(userName):
     # Check if user exists
-    db_user = session.query(User).filter_by(id=userId).first()
+    db_user = session.query(User).filter_by(username=userName).first()
     if not db_user:
         return Response(status=404, response='A user with provided ID was not found.')
 
     if db_user.username != auth.username():
-        return Response(status=404, response='You can get only your information')
+        return Response(status=406, response='You can get only your information')
 
     # Return user data
     user_data = {'id': db_user.id, 'name': db_user.name, 'surname': db_user.surname, 'username': db_user.username}
     return jsonify({"user": user_data})
 
 
-# Update user by id
-@user.route('/api/v1/user/<userId>', methods=['PUT'])
+# Update user by username
+@user.route('/api/v1/user/<userName>', methods=['PUT'])
 @auth.login_required
-def update_user(userId):
+def update_user(userName):
     # Get data from request body
     data = request.get_json()
 
@@ -52,7 +53,7 @@ def update_user(userId):
         return jsonify(err.messages), 400
 
     # Check if user exists
-    db_user = session.query(User).filter_by(id=userId).first()
+    db_user = session.query(User).filter_by(username=userName).first()
     if not db_user:
         return Response(status=404, response='A user with provided ID was not found.')
 
@@ -82,16 +83,16 @@ def update_user(userId):
     return jsonify({"user": user_data})
 
 
-# Delete user by id
-@user.route('/api/v1/user/<userId>', methods=['DELETE'])
+# Delete user by username
+@user.route('/api/v1/user/<userName>', methods=['DELETE'])
 @auth.login_required
-def delete_user(userId):
+def delete_user(userName):
     # Check if user exists
-    db_user = session.query(User).filter_by(id=userId).first()
+    db_user = session.query(User).filter_by(username=userName).first()
     if not db_user:
         return Response(status=404, response='A user with provided ID was not found.')
     if db_user.username != auth.username():
-        return Response(status=404, response='You can delete only your account')
+        return Response(status=406, response='You can delete only your account')
     # Delete user
     session.delete(db_user)
     session.commit()

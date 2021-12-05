@@ -24,7 +24,7 @@ def create_audience():
     # Check if audience already exists
     exists = session.query(Audience.id).filter_by(number=data['number']).first()
     if exists:
-        return Response(status=400, response='Audience with such number already exists.')
+        return Response(status=404, response='Audience with such number already exists.')
 
     # Create new audience
     new_audience = Audience(number=data['number'], amount_of_places=data['amount_of_places'], status=data['status'])
